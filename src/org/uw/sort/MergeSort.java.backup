@@ -1,0 +1,73 @@
+package org.uw.sort;
+
+
+public class MergeSort implements Sort {
+
+	private static int[] array;
+    private static int[] mergeArray;
+    private int length;
+    
+    public void sort(int inputArr[]) 
+    {
+        this.array = inputArr;
+        this.length = inputArr.length;
+        this.mergeArray = new int[length];
+        mergesort(null, 0, length - 1);
+        this.array = null;
+        this.mergeArray = null;
+    }
+
+    @Override
+	public void sort(DrawArray dataset) 
+	{
+    	this.array = dataset.values;
+        this.mergeArray = new int[dataset.length()];
+		mergesort(dataset, 0 , dataset.length()-1);
+	}
+    
+    @Override
+	public String getName() {
+		return "Merge Sort";
+	}
+    
+    //Adapted the original implementation to use compareAndSwap for highlighting 
+  	//and swapping for visualization
+  	public static void mergesort(DrawArray array, int low, int hi) 
+  	{
+  		if (hi <= low)
+  			return;
+  		
+  		array.setInactive(low, hi);
+  		int high = low + (hi - low)/2; 		
+  		
+  		mergesort(array, low, high);
+  		mergesort(array, high + 1, hi);
+  		mergeSortedSubArrays(array, low, high, hi);
+  	}
+
+  
+    public static void mergeSortedSubArrays(DrawArray dataset, int lowerIndex, int middle, int higherIndex) { 
+    	
+    	int i = lowerIndex, j = middle+1;
+		for (int k = lowerIndex; k <= higherIndex; k++)
+			mergeArray[k] = array[k];
+		for (int k = lowerIndex; k <= higherIndex; k++)
+			if (i > middle){				
+				dataset.swap(k, j);
+                array[k] = mergeArray[j++];
+			}
+			else if (j > higherIndex ) {
+				dataset.swap(k, i);
+                array[k] = mergeArray[i++];				
+			}
+			else if (mergeArray[j] < mergeArray[i]){				
+				dataset.swap(k, j);
+				array[k] = mergeArray[j++];            	
+			}
+			else{				
+				dataset.swap(k, i);
+                array[k] = mergeArray[i++];
+			}	
+    }
+
+}
